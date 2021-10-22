@@ -27,9 +27,7 @@ setup(
     packages=find_packages(exclude=["*tests*"]),
     install_requires=[
         'matplotlib==3.4.3',
-        'pyiron_atomistics==0.2.27'
-    ],
-    extras_require=[
+        'pyiron_atomistics==0.2.27',
         'nglview==2.7.7',
         'seaborn'
     ],
