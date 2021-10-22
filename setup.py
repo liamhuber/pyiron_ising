@@ -2,11 +2,10 @@
 Setuptools based setup module
 """
 from setuptools import setup, find_packages
-import versioneer
 
 setup(
     name='pyiron_ising',
-    version=versioneer.get_version(),
+    version='1.0',
     description='Ising model code based on the work in the MSc thesis of Vijay Bhuva.',
     long_description='http://pyiron.org',
 
@@ -34,6 +33,5 @@ setup(
         'nglview==2.7.7',
         'seaborn'
     ],
-    cmdclass=versioneer.get_cmdclass(),
 
 )
