@@ -1,0 +1,7 @@
+channels:
+- conda-forge
+dependencies:
+- python =3.9
+- pyiron_atomistics =0.2.27
+- nglview =2.7.7
+- seaborn
