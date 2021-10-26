@@ -2,7 +2,7 @@
 # Copyright (c) Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department
 # Distributed under the terms of "New BSD License", see the LICENSE file.
 
-from ._ising import TestIsing
+from tests.unit._ising import TestIsing
 from pyiron_ising.model import Model, Chain1D, Square2D, Hex2D, BCC3D, FCC3D
 import numpy as np
 from abc import ABC, abstractmethod
