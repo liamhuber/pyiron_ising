@@ -33,7 +33,6 @@ jobs:
       run: |
         python .ci_support/pyironconfig.py
         pip install --no-deps .
-        pip install coverage
     - name: Test
       shell: bash -l {0}
-      run: coverage run -m unittest discover tests/unit
+      run: python run -m unittest discover tests/unit
