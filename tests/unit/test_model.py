@@ -78,7 +78,7 @@ class TestModel(TestIsing):
         )
 
 
-class _SpecialTests(TestIsing, ABC):
+class _SpecialTests(ABC):
     """
     unittest.TestCase inheritance implicit, otherwise it tries to actuall test this.
     Class attributes `_class`, `_bad_reps_tuple`, `_ok_reps_tuple`, and `_expected_neighbors` are required.
@@ -116,7 +116,7 @@ class _SpecialTests(TestIsing, ABC):
             model.n_neighbors = 42
 
 
-class TestChain1D(_SpecialTests):
+class TestChain1D(TestIsing, _SpecialTests):
     _class = Chain1D
     _bad_reps_tuple = 2, 2
     _ok_reps_tuple = 2
@@ -164,28 +164,28 @@ class TestChain1D(_SpecialTests):
         self.assertEqual(0, copied_model.genome[0], msg="Modifying original genome should not effect copy")
 
 
-class TestSquare2D(_SpecialTests):
+class TestSquare2D(TestIsing, _SpecialTests):
     _class = Square2D
     _bad_reps_tuple = 2, 2, 2
     _ok_reps_tuple = 1, 2
     _expected_neighbors = 4
 
 
-class TestHex2D(_SpecialTests):
+class TestHex2D(TestIsing, _SpecialTests):
     _class = Hex2D
     _bad_reps_tuple = 2, 2, 2
     _ok_reps_tuple = 1, 2
     _expected_neighbors = 6
 
 
-class TestBCC3D(_SpecialTests):
+class TestBCC3D(TestIsing, _SpecialTests):
     _class = BCC3D
     _bad_reps_tuple = 2, 2
     _ok_reps_tuple = 1, 2, 3
     _expected_neighbors = 8
 
 
-class TestFCC3D(_SpecialTests):
+class TestFCC3D(TestIsing, _SpecialTests):
     _class = FCC3D
     _bad_reps_tuple = 2, 2
     _ok_reps_tuple = 1, 2, 3
