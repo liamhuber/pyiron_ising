@@ -4,7 +4,7 @@ Setuptools based setup module
 from setuptools import setup, find_packages
 
 setup(
-    name='pyiron_ising',
+    name='pyiron_ising_old',
     version='1.0',
     description='Ising model code based on the work in the MSc thesis of Vijay Bhuva.',
     long_description='http://pyiron.org',
