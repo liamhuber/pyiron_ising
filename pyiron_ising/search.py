@@ -4,6 +4,7 @@
 
 from typing import List, Tuple, Callable, Union
 import numpy as np
+from pandas import unique  # Preserves order, and is apparently also faster than numpy's (probably because skips sort)
 
 __author__ = "Liam Huber, Vijay Bhuva"
 __copyright__ = (
@@ -27,7 +28,7 @@ def _add_to_cluster(
     i = queue.pop()
     to_add = [j for j in topology[i] if condition_fnc(i, j, **condition_kwargs)]
     queue += np.setdiff1d(to_add, cluster).astype(int).tolist()
-    cluster = np.unique(cluster + to_add).astype(int).tolist()
+    cluster = unique(cluster + to_add).astype(int).tolist()
     return queue, cluster
 
 

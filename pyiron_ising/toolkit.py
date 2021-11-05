@@ -2,13 +2,15 @@
 # Copyright (c) Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department
 # Distributed under the terms of "New BSD License", see the LICENSE file.
 """
-A toolkit for managing extensions to the project msip.
+A toolkit for managing extensions from ising.
 """
 
 from pyiron_base import Toolkit, Project, JobFactoryCore
 from pyiron_ising.model import Model, Chain1D, Square2D, Hex2D, FCC3D, BCC3D
+from pyiron_ising.mutate import Flip, Swap, Cluster, Mutator
 from pyiron_ising.job.ising import Ising
 from pyiron_ising.job.parallel import ParallelIsing
+from functools import wraps
 
 __author__ = "Liam Huber"
 __copyright__ = (
@@ -63,6 +65,23 @@ class ModelFactory:
         return BCC3D
 
 
+class MutationFactory:
+    @classmethod
+    @property
+    def Flip(cls):
+        return Flip
+
+    @classmethod
+    @property
+    def Swap(cls):
+        return Swap
+
+    @classmethod
+    @property
+    def Cluster(cls):
+        return Cluster
+
+
 class IsingTools(Toolkit):
     def __init__(self, project: Project):
         super().__init__(project)
@@ -75,3 +94,12 @@ class IsingTools(Toolkit):
     @property
     def model(self):
         return ModelFactory
+
+    @property
+    def mutation(self):
+        return MutationFactory
+
+    @property
+    @wraps(Mutator)
+    def mutator(self):
+        return Mutator
