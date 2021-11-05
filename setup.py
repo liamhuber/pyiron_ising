@@ -29,7 +29,8 @@ setup(
         'matplotlib==3.4.3',
         'pyiron_atomistics==0.2.27',
         'nglview==2.7.7',
-        'seaborn'
+        'seaborn',
+        'pandas'
     ],
 
 )
