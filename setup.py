@@ -2,11 +2,10 @@
 Setuptools based setup module
 """
 from setuptools import setup, find_packages
-import versioneer
 
 setup(
     name='pyiron_ising',
-    version=versioneer.get_version(),
+    version='1.0',
     description='Ising model code based on the work in the MSc thesis of Vijay Bhuva.',
     long_description='http://pyiron.org',
 
@@ -28,12 +27,9 @@ setup(
     packages=find_packages(exclude=["*tests*"]),
     install_requires=[
         'matplotlib==3.4.3',
-        'pyiron_atomistics==0.2.27'
-    ],
-    extras_require=[
+        'pyiron_atomistics==0.2.27',
         'nglview==2.7.7',
         'seaborn'
     ],
-    cmdclass=versioneer.get_cmdclass(),
 
 )

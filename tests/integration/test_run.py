@@ -3,6 +3,7 @@
 # Distributed under the terms of "New BSD License", see the LICENSE file.
 
 from pyiron_base._tests import TestWithCleanProject
+import pyiron_ising
 import numpy as np
 
 

@@ -2,7 +2,7 @@
 # Copyright (c) Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department
 # Distributed under the terms of "New BSD License", see the LICENSE file.
 
-from ._ising import TestIsing
+from tests.unit._ising import TestIsing
 from pyiron_ising.mutate import Flip, Swap, Cluster, Mutator
 from pyiron_ising.toolkit import ModelFactory
 import numpy as np
