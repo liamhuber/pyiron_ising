@@ -48,7 +48,16 @@ class Mutation(HasStorage, ABC):
 
 
 class Flip(Mutation):
-    """Change a spin to something else."""
+    """
+    Change a spin to something else.
+
+    __init__ args:
+        weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+
+    __call__ args:
+        model (Model): The model to mutate.
+        i (int|None): the index whose spin to flip. (Default is None, choose index randomly)
+    """
     def __call__(self, model: Model, i: Union[int, None] = None) -> str and int:
         i = model.choose(1) if i is None else i
         new_spin = model.choose(1, array=model.unique_spins, mask=model.unique_spins != model.genome[i])
@@ -57,7 +66,19 @@ class Flip(Mutation):
 
 
 class Swap(Mutation):
-    """Exchange two spins."""
+    """
+    Exchange two spins.
+
+    __init__ args:
+        weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+        naive (bool): Choose indices at total random instead of ensuring they have different spins. (Default is False,
+            make sure they have different spins first!)
+
+    __call__ args:
+        model (Model): The model to mutate.
+        i, j (int|None): the indices whose spins to swap. (Default is None, choose indices (semi- depending on naive
+            parameter) randomly.)
+    """
     def __init__(self, weight: float = 1, naive: bool = False):
         super().__init__(weight=weight)
         self.storage.naive = naive
@@ -80,7 +101,27 @@ class Swap(Mutation):
 
 
 class Cluster(Mutation):
-    """Exchange two groups of spins."""
+    """
+    Exchange two groups of spins.
+
+    Uses breadth-first searching to construct two equally-sized clusters of like spins, where the larger group gets
+    truncated down to match the size of the smaller. In case any cluster is size 1, the mutation registers as a "swap".
+
+    Cluster construction by specifying the minimum and/or maximum neighbours with similar spin for a candidate in the
+    breadth first search to qualify for joining the cluster.
+
+    __init__ args:
+        weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+        min_like_neighbors (int|None): The minimum numbers of like-spin neighbours to qualify for addition to the
+            cluster. (Default is None, no restriction.)
+        max_like_neighbors (int|None): The maximum numbers of like-spin neighbours to qualify for addition to the
+            cluster. (Default is None, no restriction.)
+
+    __call__ args:
+        model (Model): The model to mutate.
+        i, j (int|None): the indices whose spins to swap. (Default is None, choose indices (semi- depending on naive
+            parameter) randomly.)
+    """
     def __init__(
             self,
             weight: float = 1,
@@ -152,17 +193,17 @@ class MutationAdder:
     def __init__(self, mutator):
         self._mutator = mutator
 
-    @wraps(Flip.__init__)
+    @wraps(Flip)
     @append_to_mutator
     def Flip(self, weight: float = 1) -> Flip:
         return Flip(weight=weight)
 
-    @wraps(Swap.__init__)
+    @wraps(Swap)
     @append_to_mutator
     def Swap(self, weight: float = 1, naive: bool = False) -> Swap:
         return Swap(weight=weight, naive=naive)
 
-    @wraps(Cluster.__init__)
+    @wraps(Cluster)
     @append_to_mutator
     def Cluster(
             self,
@@ -182,6 +223,8 @@ class Mutator(HasStorage):
 
     Attributes:
         mutations (list[Mutation]): A collection of mutations to choose from.
+        add (MutationAdder): A helper property which lets you use tab-completion for adding mutations.
+        normalized_weights (numpy.ndarray[float]): The normalized relative weights of each mutation.
     """
     def __init__(self):
         """A class for modifying the genome of `model` classes."""
