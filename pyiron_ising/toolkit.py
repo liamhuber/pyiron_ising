@@ -2,7 +2,7 @@
 # Copyright (c) Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department
 # Distributed under the terms of "New BSD License", see the LICENSE file.
 """
-A toolkit for managing extensions to the project msip.
+A toolkit for managing extensions from ising.
 """
 
 from pyiron_base import Toolkit, Project, JobFactoryCore
