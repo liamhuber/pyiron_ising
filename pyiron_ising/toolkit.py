@@ -68,19 +68,16 @@ class ModelFactory:
 class MutationFactory:
     @classmethod
     @property
-    @wraps(Flip)
     def Flip(cls):
         return Flip
 
     @classmethod
     @property
-    @wraps(Swap)
     def Swap(cls):
         return Swap
 
     @classmethod
     @property
-    @wraps(Cluster)
     def Cluster(cls):
         return Cluster
 
