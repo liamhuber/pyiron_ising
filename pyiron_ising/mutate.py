@@ -213,6 +213,10 @@ class MutationAdder:
     ) -> Cluster:
         return Cluster(weight=weight, min_like_neighbors=min_like_neighbors, max_like_neighbors=max_like_neighbors)
 
+    @append_to_mutator
+    def __call__(self, mutation):
+        return mutation
+
 
 class Mutator(HasStorage):
     """
