@@ -135,10 +135,9 @@ class Ising(PythonTemplateJob):
 
     def run_static(self):
         self.status.running = True
-        for n in np.arange(self.input.n_steps):
-            if n % self.input.n_print == 0:
-                self.output.collect_frame(n, self.model)
+        self.output.collect_frame(0, self.model)
 
+        for n in np.arange(self.input.n_steps):
             old_fitness = self.model.fitness
             old_genome = self.model.genome.copy()
             mutation_info = self.mutate(self.model)
@@ -148,11 +147,14 @@ class Ising(PythonTemplateJob):
             elif self.input.log_mutations:
                 self.output.log_mutation(n, mutation_info, fitness - old_fitness)
 
+            if n % self.input.n_print == 0:
+                self.output.collect_frame(n + 1, self.model)
+
             if self.input.stopping_fitness is not None and fitness >= self.input.stopping_fitness:
                 break
 
         if n % self.input.n_print != 0:
-            self.output.collect_frame(n, self.model)
+            self.output.collect_frame(n + 1, self.model)
 
         self.status.finished = True
         self.to_hdf()
