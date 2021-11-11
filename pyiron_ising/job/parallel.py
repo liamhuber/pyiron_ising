@@ -89,23 +89,31 @@ class _PostProcessing:
         return [self._p.project.load(name) for name in self._p.child_names]
 
     @cached_property
-    def frame(self):
+    def frame(self) -> np.ndarray:
         child_frame_lengths = [len(c.output.frame) for c in self.children]
         return self.children[np.argmax(child_frame_lengths)].output.frame
 
+    @property
+    def end_frame(self) -> np.ndarray:
+        return np.array([c.output.frame[-1] for c in self.children])
+
+    @property
+    def median_end_frame(self) -> float:
+        return np.median(self.end_frame)
+
     @cached_property
-    def padded_child_fitness(self):
+    def padded_child_fitness(self) -> np.ndarray:
         return np.array([
             np.pad(c.output.fitness, pad_width=(0, len(self.frame) - len(c.output.fitness)), mode='edge')
             for c in self.children
         ])
 
     @property
-    def median_fitness(self):
+    def median_fitness(self) -> np.ndarray:
         return np.median(self.padded_child_fitness, axis=0)
 
     @property
-    def std_fitness(self):
+    def std_fitness(self) -> np.ndarray:
         return np.std(self.padded_child_fitness, axis=0)
 
     def plot3d(self, child=0, frame=-1, **kwargs):
@@ -116,6 +124,7 @@ class _PostProcessing:
             label_x=True, label_y=True,
             show_success_log=False, show_neutral_log=False,
             show_legend=True,
+            show_solution=True,
             logx=True, logy=False,
             child_alpha=0.5, child_style='--',
             **plot_kwargs
@@ -148,6 +157,15 @@ class _PostProcessing:
             label='median fitness',
             **plot_kwargs
         )
+
+        if show_solution:
+            ax.axvspan(self.end_frame.min(), self.end_frame.max(), alpha=0.5 * child_alpha)
+            ax.axvline(self.median_end_frame, color='k', linestyle='--', label='median steps to solition')
+            ax.axvspan(
+                self.median_end_frame - self.end_frame.std(),
+                self.median_end_frame + self.end_frame.std(),
+                alpha=0.5 * child_alpha
+            )
 
         if show_legend:
             ax.legend()
