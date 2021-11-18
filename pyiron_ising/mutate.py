@@ -237,7 +237,7 @@ class Mutator(HasStorage):
         self._adder = MutationAdder(self)
 
     @property
-    def mutations(self) -> DataContainer[Type[Mutation]]:
+    def mutations(self) -> DataContainer:  # [Type[Mutation]]
         return self.storage.mutations
 
     @property
