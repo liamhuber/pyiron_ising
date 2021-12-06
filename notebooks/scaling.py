@@ -295,3 +295,93 @@ class BCCSwap(Swapper, BCC, Scaling):
 
 class BCCCluster(Clusterer, BCC, Scaling):
     pass
+
+
+class Experiments:
+    def __init__(self, project):
+        self.project = project
+        
+    def job_table(self, unfinished_only=False):
+        mask = self.project.job_table().hamilton.values == 'ParallelIsing'
+        if unfinished_only:
+            mask *= self.project.job_table().status.values != 'finished'
+        return self.project.job_table()[mask]
+    
+    @cached_property 
+    def chain_swap(self):
+        return ChainSwap(
+            self.project, 
+            'chain_swap', 
+            [16, 32, 48, 64, 80, 96, 112, 128],
+        )
+    
+    @cached_property
+    def chain_cluster(self):
+        return ChainCluster(
+            pr, 
+            'chain_cluster', 
+            [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
+        )
+    
+    @cached_property
+    def square_swap(self):
+        return SquareCluster(
+            pr, 
+            'squre_swap',
+            [4, 6, 8, 10, 12],
+        )
+
+    @cached_property
+    def square_clusters(self):
+        return [
+            SquareCluster(
+                pr, 
+                f'square_cluster{i}',
+                [4, 8, 12, 16, 24, 28, 32,],  # 48, 64, 96, 128],  # Died by 48
+                min_like_neighbors=i,
+                max_like_neighbors=i,
+            )
+            for i in [2, 3]
+        ]
+    
+    @cached_property
+    def hex_swap(self):
+        return HexSwap(
+            pr, 
+            'hex_swap',
+            [4, 6, 8, 10, 12],
+        )
+
+    @cached_property
+    def hex_clusters(self):
+        return [
+            HexCluster(
+                pr, 
+                f'hex_cluster{i}',
+                [4, 6, 8, 10, 12, 14, 16,],  # 32, 48, 64, 96, 128],  # Died by 32
+                min_like_neighbors=i,
+                max_like_neighbors=i,
+            )
+            for i in [2, 3, 4, 5]
+        ]
+    
+    @cached_property
+    def bcc_swap(self):
+        return BCCSwap(
+            pr, 
+            'bcc_swap',
+            [2, 3, 4, 5],
+        )
+    
+    @cached_property
+    def bcc_clusters(self):
+        return [
+            BCCCluster(
+                pr, 
+                f'bcc_cluster{i}',
+                [2, 3, 4, 5, 6, 7, 8,],  # 16, 24, 32],  # Timed out at 16
+                min_like_neighbors=i,
+                max_like_neighbors=i,
+            )
+            for i in [3, 4, 5, 6]
+        ]
