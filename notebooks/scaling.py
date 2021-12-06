@@ -1,5 +1,5 @@
 """
-Some helper classes for running jobs with higher throughput
+Some helper classes for running jobs with higher throughput, slapped together post-facto to make life easier during plotting
 """
 
 from pyiron_ising import Project, Model, Mutation, Chain1D, Square2D, Hex2D, BCC3D, Swap, Cluster
@@ -318,7 +318,7 @@ class Experiments:
     @cached_property
     def chain_cluster(self):
         return ChainCluster(
-            pr, 
+            self.project, 
             'chain_cluster', 
             [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
         )
@@ -326,7 +326,7 @@ class Experiments:
     @cached_property
     def square_swap(self):
         return SquareCluster(
-            pr, 
+            self.project, 
             'squre_swap',
             [4, 6, 8, 10, 12],
         )
@@ -335,7 +335,7 @@ class Experiments:
     def square_clusters(self):
         return [
             SquareCluster(
-                pr, 
+                self.project, 
                 f'square_cluster{i}',
                 [4, 8, 12, 16, 24, 28, 32,],  # 48, 64, 96, 128],  # Died by 48
                 min_like_neighbors=i,
@@ -347,7 +347,7 @@ class Experiments:
     @cached_property
     def hex_swap(self):
         return HexSwap(
-            pr, 
+            self.project, 
             'hex_swap',
             [4, 6, 8, 10, 12],
         )
@@ -356,7 +356,7 @@ class Experiments:
     def hex_clusters(self):
         return [
             HexCluster(
-                pr, 
+                self.project, 
                 f'hex_cluster{i}',
                 [4, 6, 8, 10, 12, 14, 16,],  # 32, 48, 64, 96, 128],  # Died by 32
                 min_like_neighbors=i,
@@ -368,7 +368,7 @@ class Experiments:
     @cached_property
     def bcc_swap(self):
         return BCCSwap(
-            pr, 
+            self.project, 
             'bcc_swap',
             [2, 3, 4, 5],
         )
@@ -377,7 +377,7 @@ class Experiments:
     def bcc_clusters(self):
         return [
             BCCCluster(
-                pr, 
+                self.project, 
                 f'bcc_cluster{i}',
                 [2, 3, 4, 5, 6, 7, 8,],  # 16, 24, 32],  # Timed out at 16
                 min_like_neighbors=i,
