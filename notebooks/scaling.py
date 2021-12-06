@@ -133,7 +133,7 @@ class Scaling(ABC):
             linestyle='none',
             fname=None,
             fmt='eps',
-            use_error=True,
+            use_error=False,
             x_style='sci',
             y_style='sci',
             **errorbar_kwargs
