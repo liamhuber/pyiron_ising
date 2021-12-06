@@ -2,6 +2,7 @@
 .idea
 *.pyc
 .ipynb_checkpoints
+*.log
 notebooks/*
 !notebooks/scaling.ipynb
 !notebooks/pedagogy.ipynb
