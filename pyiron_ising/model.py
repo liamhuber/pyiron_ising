@@ -175,10 +175,14 @@ class Model(HasStorage):
         )
 
     @property
-    def fitness(self):
+    def fitness_array(self):
         spins = self.genome
         neighbor_spins = self.genome[self.topology]
-        return self.interaction[spins[:, np.newaxis], neighbor_spins].mean()
+        return self.interaction[spins[:, np.newaxis], neighbor_spins].mean(axis=-1)
+
+    @property
+    def fitness(self):
+        return self.fitness_array.mean()
 
 
 class _SpecialModel(Model, ABC):

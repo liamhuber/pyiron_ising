@@ -77,6 +77,17 @@ class TestModel(TestIsing):
             msg="Swapping genome should modify the underlying Atoms structure of the model."
         )
 
+    def test_fitness(self):
+        self.model.genome = np.random.choice(self.model.unique_spins, len(self.model))
+        self.assertEqual(
+            len(self.model.fitness_array), len(self.model),
+            msg="Fitness array should store one fitness per spin"
+        )
+        self.assertAlmostEqual(
+            self.model.fitness_array.mean(), self.model.fitness,
+            msg="System fitness should simply be an average of the individual environments"
+        )
+
 
 class _SpecialTests(ABC):
     """
