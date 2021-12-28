@@ -62,6 +62,8 @@ class Flip(Mutation):
 
     __init__ args:
         weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+        imperfect_seeds_only (float): Only make initial site selection among sites with fitness less than 1. (Default
+            is False, no constraints on site selection.)
 
     __call__ args:
         model (Model): The model to mutate.
@@ -81,6 +83,8 @@ class Swap(Mutation):
 
     __init__ args:
         weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+        imperfect_seeds_only (float): Only make initial site selection among sites with fitness less than 1. (Default
+            is False, no constraints on site selection.)
         naive (bool): Choose indices at total random instead of ensuring they have different spins. (Default is False,
             make sure they have different spins first!)
 
@@ -126,6 +130,8 @@ class Cluster(Mutation):
 
     __init__ args:
         weight (float): Relative selection probability weight when belonging to a mutator. (Default is 1.)
+        imperfect_seeds_only (float): Only make initial site selection among sites with fitness less than 1. (Default
+            is False, no constraints on site selection.)
         min_like_neighbors (int|None): The minimum numbers of like-spin neighbours to qualify for addition to the
             cluster. (Default is None, no restriction.)
         max_like_neighbors (int|None): The maximum numbers of like-spin neighbours to qualify for addition to the
@@ -140,7 +146,8 @@ class Cluster(Mutation):
             self,
             weight: float = 1,
             min_like_neighbors: Union[int, None] = None,
-            max_like_neighbors: Union[int, None] = None
+            max_like_neighbors: Union[int, None] = None,
+            max_size: Union[int, None] = None,
     ):
         super().__init__(weight=weight)
         self.storage.min_like_neighbors = min_like_neighbors
