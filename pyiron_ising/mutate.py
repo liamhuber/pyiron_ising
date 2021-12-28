@@ -26,9 +26,10 @@ __date__ = "Oct 16, 2021"
 
 
 class Mutation(HasStorage, ABC):
-    def __init__(self, weight: float = 1):
+    def __init__(self, weight: float = 1, imperfect_seeds_only: bool = False):
         super().__init__()
         self.storage.weight = weight
+        self.storage.imperfect_seeds_only = imperfect_seeds_only
 
     @property
     def weight(self) -> float:
@@ -37,6 +38,14 @@ class Mutation(HasStorage, ABC):
     @weight.setter
     def weight(self, w: float):
         self.storage.weight = w
+
+    @property
+    def imperfect_seeds_only(self) -> float:
+        return self.storage.imperfect_seeds_only
+
+    @imperfect_seeds_only.setter
+    def imperfect_seeds_only(self, b: bool):
+        self.storage.imperfect_seeds_only = b
 
     @abstractmethod
     def __call__(self, model: Model, *seed_sites: Union[int, None]) -> str and Union[int, Tuple]:
@@ -59,7 +68,7 @@ class Flip(Mutation):
         i (int|None): the index whose spin to flip. (Default is None, choose index randomly)
     """
     def __call__(self, model: Model, i: Union[int, None] = None) -> str and int:
-        i = model.choose(1) if i is None else i
+        i = model.choose(1, forbid_perfect_sites=self.imperfect_seeds_only) if i is None else i
         other_spins = model.unique_spins[model.unique_spins != model.genome[i]]
         new_spin = np.random.choice(other_spins, 1, replace=False)
         model.genome[i] = new_spin
@@ -94,9 +103,13 @@ class Swap(Mutation):
             i: Union[int, None] = None,
             j: Union[int, None] = None
     ) -> str and int and int:
-        i = model.choose(1) if i is None else i
-        j = model.choose(1, mask=model.sites != i if self.naive else model.genome != model.genome[i]) if j is None \
-            else j
+        i = model.choose(1, forbid_perfect_sites=self.imperfect_seeds_only) if i is None else i
+        j = model.choose(
+            1,
+            forbidden_site=i if self.naive else None,
+            forbidden_spin=model.genome[i] if not self.naive else None,
+            forbid_perfect_sites=self.imperfect_seeds_only
+        ) if j is None else j
         model.genome[[i, j]] = model.genome[[j, i]]
         return "naive_swap" if self.naive else "swap", i, j
 
@@ -159,8 +172,12 @@ class Cluster(Mutation):
             i: Union[int, None] = None,
             j: Union[int, None] = None
     ) -> str and int and int:
-        i = model.choose(1) if i is None else i
-        j = model.choose(1, mask=model.genome != model.genome[i]) if j is None else j
+        i = model.choose(1, forbid_perfect_sites=self.imperfect_seeds_only) if i is None else i
+        j = model.choose(
+            1,
+            forbidden_spin=model.genome[i],
+            forbid_perfect_sites=self.imperfect_seeds_only
+        ) if j is None else j
         cluster_i, cluster_j = double_bfs(
             i, j, model.topology,
             condition_fnc=self._neighbor_match_condition,

@@ -143,8 +143,20 @@ class Model(HasStorage):
         """Randomly reassign spins."""
         self.structure.indices = self.genome[self.choose(len(self))]
 
-    def choose(self, n_choices: int, mask: np.ndarray = None):
+    def choose(
+            self,
+            n_choices: int,
+            mask: Union[np.ndarray, None] = None,
+            forbidden_site: Union[Integral, None] = None,
+            forbidden_spin: Union[Integral, None] = None,
+            forbid_perfect_sites: bool = False,
+    ):
         """Choose sites randomly without replacement."""
+        true = np.ones(len(self), dtype=bool)
+        mask = (mask if mask is not None else true) * \
+               (self.sites != forbidden_site if forbidden_site is not None else true) * \
+               (self.genome != forbidden_spin if forbidden_spin is not None else true) * \
+               (self.fitness_array < 1 if forbid_perfect_sites else true)
         sites = self.sites[mask] if mask is not None else self.sites
         choice = np.random.choice(sites, n_choices, replace=False)
         if n_choices == 1:

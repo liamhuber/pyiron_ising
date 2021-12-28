@@ -60,6 +60,12 @@ class TestModel(TestIsing):
         self.assertIsInstance(self.model.choose(2), np.ndarray, msg="Multiple choices should come together")
         self.assertEqual(0, self.model.choose(1, mask=self.model.sites == 0), msg="Trivial masking failed")
         self.assertRaises(ValueError, self.model.choose, 999)  # More choices than elements should fail
+        self.assertListEqual([0, 2, 3], np.sort(self.model.choose(3, forbidden_site=1)).tolist())
+        self.assertListEqual([0, 2, 3], np.sort(self.model.choose(3, forbidden_spin=1)).tolist())
+        self.model.genome = np.zeros(len(self.model), dtype=int)
+        self.model.interaction = 'xenophobic'
+        with self.assertRaises(Exception):
+            self.model.choose(1, forbid_perfect_sites=True)  # No sites to choose from
 
     def test_genome_controls_structure(self):
         self.assertNotEqual(
