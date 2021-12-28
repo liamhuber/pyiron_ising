@@ -45,11 +45,9 @@ class TestModel(TestIsing):
         )
 
     def test_get_sites_by_spin(self):
-        initial_sites = np.argwhere(self.model.genome == 1)
-        alternate_sites = [1, 3]
-        self.model.genome[alternate_sites] = 1
-        self.model.genome[initial_sites] = 0
-        self.assertListEqual(self.model.get_sites_by_spin(1).tolist(), alternate_sites)
+        self.model.genome = np.zeros(len(self.model))
+        self.model.genome[1:3] = 1
+        self.assertListEqual(self.model.get_sites_by_spin(1).tolist(), [1, 2])
 
     def test_unique_spins(self):
         self.assertListEqual(
