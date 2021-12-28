@@ -17,17 +17,14 @@ from pyiron_ising.model import Model
 
 
 class TestIsing(TestWithProject, ABC):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+
+    def setUp(self):
+        super().setUp()
         structure = StructureFactory().bulk("Al", cubic=True)
         structure[1] = "Cu"
         structure[2] = "Ag"
         structure[3] = "Au"
-        cls.structure = structure
-        cls.interaction = 'xenophilic'
-        cls.n_neighbors = 12
-
-    def setUp(self):
-        super().setUp()
+        self.structure = structure
+        self.interaction = 'xenophilic'
+        self.n_neighbors = 12
         self.model = Model(self.structure, self.n_neighbors, self.interaction, shuffle=False)
