@@ -60,7 +60,8 @@ class Flip(Mutation):
     """
     def __call__(self, model: Model, i: Union[int, None] = None) -> str and int:
         i = model.choose(1) if i is None else i
-        new_spin = model.choose(1, array=model.unique_spins, mask=model.unique_spins != model.genome[i])
+        other_spins = model.unique_spins[model.unique_spins != model.genome[i]]
+        new_spin = np.random.choice(other_spins, 1, replace=False)
         model.genome[i] = new_spin
         return "flip", i
 
