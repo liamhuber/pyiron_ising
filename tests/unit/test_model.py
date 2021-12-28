@@ -59,7 +59,6 @@ class TestModel(TestIsing):
         self.assertIsInstance(self.model.choose(1), Integral, msg="Single choice should be unwrapped")
         self.assertIsInstance(self.model.choose(2), np.ndarray, msg="Multiple choices should come together")
         self.assertEqual(0, self.model.choose(1, mask=self.model.sites == 0), msg="Trivial masking failed")
-        self.assertIsInstance(self.model.choose(1, array=[1, 2, 3]), Integral, msg="Can choose from passed array")
         self.assertRaises(ValueError, self.model.choose, 999)  # More choices than elements should fail
 
     def test_genome_controls_structure(self):
