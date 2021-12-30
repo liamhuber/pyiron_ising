@@ -199,7 +199,7 @@ class Cluster(Mutation):
             forbid_perfect_sites=self.imperfect_seeds_only
         ) if j is None else j
         cluster_i, cluster_j = double_bfs(
-            i, j, model.topology,
+            i, j, model.topology, max_size=self.max_size,
             condition_fnc=self._neighbor_match_condition,
             min_like_neighbors=self.min_like_neighbors,
             max_like_neighbors=self.max_like_neighbors,
