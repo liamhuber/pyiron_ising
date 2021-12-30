@@ -136,6 +136,7 @@ class Cluster(Mutation):
             cluster. (Default is None, no restriction.)
         max_like_neighbors (int|None): The maximum numbers of like-spin neighbours to qualify for addition to the
             cluster. (Default is None, no restriction.)
+        max_size (int|None): The largest cluster size to allow.
 
     __call__ args:
         model (Model): The model to mutate.
@@ -152,6 +153,7 @@ class Cluster(Mutation):
         super().__init__(weight=weight)
         self.storage.min_like_neighbors = min_like_neighbors
         self.storage.max_like_neighbors = max_like_neighbors
+        self.storage.max_size = max_size
 
     @property
     def min_like_neighbors(self) -> int:
@@ -160,6 +162,10 @@ class Cluster(Mutation):
     @property
     def max_like_neighbors(self) -> int:
         return self.storage.max_like_neighbors
+
+    @property
+    def max_size(self) -> int:
+        return self.storage.max_size
 
     @staticmethod
     def _neighbor_match_condition(i, j, min_like_neighbors, max_like_neighbors, match_genome, match_topology) -> bool:
