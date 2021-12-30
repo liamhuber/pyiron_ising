@@ -93,8 +93,8 @@ class Swap(Mutation):
         i, j (int|None): the indices whose spins to swap. (Default is None, choose indices (semi- depending on naive
             parameter) randomly.)
     """
-    def __init__(self, weight: float = 1, naive: bool = False):
-        super().__init__(weight=weight)
+    def __init__(self, weight: float = 1, imperfect_seeds_only: bool = False, naive: bool = False):
+        super().__init__(weight=weight, imperfect_seeds_only=imperfect_seeds_only)
         self.storage.naive = naive
 
     @property
@@ -146,11 +146,12 @@ class Cluster(Mutation):
     def __init__(
             self,
             weight: float = 1,
+            imperfect_seeds_only: bool = False,
             min_like_neighbors: Union[int, None] = None,
             max_like_neighbors: Union[int, None] = None,
             max_size: Union[int, None] = None,
     ):
-        super().__init__(weight=weight)
+        super().__init__(weight=weight, imperfect_seeds_only=imperfect_seeds_only)
         self.storage.min_like_neighbors = min_like_neighbors
         self.storage.max_like_neighbors = max_like_neighbors
         self.storage.max_size = max_size
