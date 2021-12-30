@@ -234,23 +234,29 @@ class MutationAdder:
 
     @wraps(Flip)
     @append_to_mutator
-    def Flip(self, weight: float = 1) -> Flip:
-        return Flip(weight=weight)
+    def Flip(self, weight: float = 1, imperfect_seeds_only: bool = False) -> Flip:
+        return Flip(weight=weight, imperfect_seeds_only=imperfect_seeds_only)
 
     @wraps(Swap)
     @append_to_mutator
-    def Swap(self, weight: float = 1, naive: bool = False) -> Swap:
-        return Swap(weight=weight, naive=naive)
+    def Swap(self, weight: float = 1, imperfect_seeds_only: bool = False, naive: bool = False) -> Swap:
+        return Swap(weight=weight, imperfect_seeds_only=imperfect_seeds_only, naive=naive)
 
     @wraps(Cluster)
     @append_to_mutator
     def Cluster(
             self,
             weight: float = 1,
+            imperfect_seeds_only: bool = False,
             min_like_neighbors: Union[int, None] = None,
             max_like_neighbors: Union[int, None] = None
     ) -> Cluster:
-        return Cluster(weight=weight, min_like_neighbors=min_like_neighbors, max_like_neighbors=max_like_neighbors)
+        return Cluster(
+            weight=weight,
+            imperfect_seeds_only=imperfect_seeds_only,
+            min_like_neighbors=min_like_neighbors,
+            max_like_neighbors=max_like_neighbors
+        )
 
     @append_to_mutator
     def __call__(self, mutation):
