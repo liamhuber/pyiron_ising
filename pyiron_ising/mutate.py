@@ -168,7 +168,14 @@ class Cluster(Mutation):
         return self.storage.max_size
 
     @staticmethod
-    def _neighbor_match_condition(i, j, min_like_neighbors, max_like_neighbors, match_genome, match_topology) -> bool:
+    def _neighbor_match_condition(
+            i: int,
+            j: int,
+            min_like_neighbors: int,
+            max_like_neighbors: int,
+            match_genome: np.ndarray,
+            match_topology: np.ndarray
+    ) -> bool:
         if match_genome[j] != match_genome[i]:
             return False
         elif min_like_neighbors is None and max_like_neighbors is None:
