@@ -45,11 +45,9 @@ class TestModel(TestIsing):
         )
 
     def test_get_sites_by_spin(self):
-        initial_sites = np.argwhere(self.model.genome == 1)
-        alternate_sites = [1, 3]
-        self.model.genome[alternate_sites] = 1
-        self.model.genome[initial_sites] = 0
-        self.assertListEqual(self.model.get_sites_by_spin(1).tolist(), alternate_sites)
+        self.model.genome = np.zeros(len(self.model))
+        self.model.genome[1:3] = 1
+        self.assertListEqual(self.model.get_sites_by_spin(1).tolist(), [1, 2])
 
     def test_unique_spins(self):
         self.assertListEqual(
@@ -61,8 +59,13 @@ class TestModel(TestIsing):
         self.assertIsInstance(self.model.choose(1), Integral, msg="Single choice should be unwrapped")
         self.assertIsInstance(self.model.choose(2), np.ndarray, msg="Multiple choices should come together")
         self.assertEqual(0, self.model.choose(1, mask=self.model.sites == 0), msg="Trivial masking failed")
-        self.assertIsInstance(self.model.choose(1, array=[1, 2, 3]), Integral, msg="Can choose from passed array")
         self.assertRaises(ValueError, self.model.choose, 999)  # More choices than elements should fail
+        self.assertListEqual([0, 2, 3], np.sort(self.model.choose(3, forbidden_site=1)).tolist())
+        self.assertListEqual([0, 2, 3], np.sort(self.model.choose(3, forbidden_spin=1)).tolist())
+        self.model.genome = np.zeros(len(self.model), dtype=int)
+        self.model.interaction = 'xenophobic'
+        with self.assertRaises(Exception):
+            self.model.choose(1, forbid_perfect_sites=True)  # No sites to choose from
 
     def test_genome_controls_structure(self):
         self.assertNotEqual(
@@ -75,6 +78,17 @@ class TestModel(TestIsing):
             initial_chem[[0, 1]].tolist(),
             self.model.structure.get_chemical_symbols()[[1, 0]].tolist(),
             msg="Swapping genome should modify the underlying Atoms structure of the model."
+        )
+
+    def test_fitness(self):
+        self.model.genome = np.random.choice(self.model.unique_spins, len(self.model))
+        self.assertEqual(
+            len(self.model.fitness_array), len(self.model),
+            msg="Fitness array should store one fitness per spin"
+        )
+        self.assertAlmostEqual(
+            self.model.fitness_array.mean(), self.model.fitness,
+            msg="System fitness should simply be an average of the individual environments"
         )
 
 

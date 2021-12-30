@@ -22,11 +22,13 @@ def _add_to_cluster(
         queue: List,
         cluster: List,
         topology: List[List],
+        max_size: Union[int, None],
         condition_fnc: Callable,
         **condition_kwargs
 ) -> Tuple[List, List]:
     i = queue.pop()
     to_add = [j for j in topology[i] if condition_fnc(i, j, **condition_kwargs)]
+    to_add = to_add[:max(max_size - len(cluster), 0)] if max_size is not None else to_add
     queue += np.setdiff1d(to_add, cluster).astype(int).tolist()
     cluster = unique(cluster + to_add).astype(int).tolist()
     return queue, cluster
@@ -36,16 +38,19 @@ def bfs(
         i: int,
         topology: Union[np.ndarray, List[List]],
         condition_fnc: Callable,
+        max_size: Union[int, None] = None,
         **condition_kwargs
 ) -> List:
     """
-        Breadth first search building a cluster starting at one node and obeying a condition function for adding new nodes.
+        Breadth first search building a cluster starting at one node and obeying a condition function for adding new
+        nodes.
 
         Args:
             i (int): Which node to start the search from.
             topology (numpy.ndarray | list): Per-site list of lists giving the all neighbouring nodes (i.e. a
                 `Neighbors.indices` object).
             condition_fnc (fnc): A function for evaluating whether or not connected nodes should be added.
+            max_size (int|None): Maximum cluster size. (Default is None, no limit.)
             *condition_args: Additional arguments for the condition function.
 
         Returns:
@@ -54,7 +59,7 @@ def bfs(
     cluster = [i]
     queue = [i] if condition_fnc(i, i, **condition_kwargs) else []
     while queue:
-        queue, cluster = _add_to_cluster(queue, cluster, topology, condition_fnc, **condition_kwargs)
+        queue, cluster = _add_to_cluster(queue, cluster, topology, max_size, condition_fnc, **condition_kwargs)
     return cluster
 
 
@@ -63,6 +68,7 @@ def double_bfs(
         j: int,
         topology: Union[np.ndarray, List[List]],
         condition_fnc: callable,
+        max_size: Union[int, None] = None,
         **condition_kwargs
 ) -> Tuple[List, List]:
     """
@@ -74,7 +80,8 @@ def double_bfs(
         topology (numpy.ndarray | list): Per-site list of lists giving the all neighbouring nodes (i.e. a
             `Neighbors.indices` object).
         condition_fnc (fnc): A function for evaluating whether or not connected nodes should be added.
-        *condition_args: Additional arguments for the condition function.
+        max_size (int|None): Maximum cluster size. (Default is None, no limit.)
+        *condition_kwargs: Additional arguments for the condition function.
 
     Returns:
         (numpy.ndarray): The clusters of equal size built from the requested nodes obeying the condition function.
@@ -86,8 +93,8 @@ def double_bfs(
     queue2 = [j] if condition_fnc(j, j, **condition_kwargs) else []
 
     while queue1 and queue2:
-        queue1, cluster1 = _add_to_cluster(queue1, cluster1, topology, condition_fnc, **condition_kwargs)
-        queue2, cluster2 = _add_to_cluster(queue2, cluster2, topology, condition_fnc, **condition_kwargs)
+        queue1, cluster1 = _add_to_cluster(queue1, cluster1, topology, max_size, condition_fnc, **condition_kwargs)
+        queue2, cluster2 = _add_to_cluster(queue2, cluster2, topology, max_size, condition_fnc, **condition_kwargs)
 
     n_smallest = min(len(cluster1), len(cluster2))
 
