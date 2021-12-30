@@ -39,7 +39,8 @@ def bfs(
         **condition_kwargs
 ) -> List:
     """
-        Breadth first search building a cluster starting at one node and obeying a condition function for adding new nodes.
+        Breadth first search building a cluster starting at one node and obeying a condition function for adding new
+        nodes.
 
         Args:
             i (int): Which node to start the search from.
@@ -74,7 +75,7 @@ def double_bfs(
         topology (numpy.ndarray | list): Per-site list of lists giving the all neighbouring nodes (i.e. a
             `Neighbors.indices` object).
         condition_fnc (fnc): A function for evaluating whether or not connected nodes should be added.
-        *condition_args: Additional arguments for the condition function.
+        *condition_kwargs: Additional arguments for the condition function.
 
     Returns:
         (numpy.ndarray): The clusters of equal size built from the requested nodes obeying the condition function.
