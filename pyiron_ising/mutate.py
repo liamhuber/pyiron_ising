@@ -249,13 +249,15 @@ class MutationAdder:
             weight: float = 1,
             imperfect_seeds_only: bool = False,
             min_like_neighbors: Union[int, None] = None,
-            max_like_neighbors: Union[int, None] = None
+            max_like_neighbors: Union[int, None] = None,
+            max_size: Union[int, None] = None
     ) -> Cluster:
         return Cluster(
             weight=weight,
             imperfect_seeds_only=imperfect_seeds_only,
             min_like_neighbors=min_like_neighbors,
-            max_like_neighbors=max_like_neighbors
+            max_like_neighbors=max_like_neighbors,
+            max_size=max_size
         )
 
     @append_to_mutator
