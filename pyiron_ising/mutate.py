@@ -213,6 +213,8 @@ class Cluster(Mutation):
         else:
             model.genome[cluster_i + cluster_j] = model.genome[cluster_j + cluster_i]
             identifier = "cluster"
+            identifier += "_imp" if self.imperfect_seeds_only else ""
+            identifier += "" if self.max_size is None else f"_ms{self.max_size}"
             identifier += "" if self.min_like_neighbors is None else f"_min{self.min_like_neighbors}"
             identifier += "" if self.max_like_neighbors is None else f"_max{self.max_like_neighbors}"
             return identifier, i, j
