@@ -169,7 +169,7 @@ class Ising(PythonTemplateJob):
             label_x=True, label_y=True, label_line=True,
             show_success_log=True, show_neutral_log=False,
             show_legend=True,
-            logx=True, logy=False,
+            logx=False, logy=False,
             **plot_kwargs
     ):
         """Show the fitness as a function of step."""
