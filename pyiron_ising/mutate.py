@@ -294,6 +294,9 @@ class Mutator(HasStorage):
         """Add a mutation to the list of available mutations."""
         return self._adder
 
+    def append(self, mutation: Mutation):
+        self.mutations.append(mutation)
+
     def __call__(self, model: Model) -> str and Union[int, Tuple]:
         """
         a mutation is selected by a (weighted) random process, the model genome is updated, and a string identifier
