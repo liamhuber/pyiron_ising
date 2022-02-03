@@ -169,7 +169,7 @@ class Ising(PythonTemplateJob):
             label_x=True, label_y=True, label_line=True,
             show_success_log=True, show_neutral_log=False,
             show_legend=True,
-            logx=True, logy=False,
+            logx=False, logy=False,
             **plot_kwargs
     ):
         """Show the fitness as a function of step."""
@@ -179,7 +179,9 @@ class Ising(PythonTemplateJob):
         if show_success_log or show_neutral_log:
             self._plot_log(ax, show_success_log, show_neutral_log, label_line)
 
-        ax.plot(self.output.frame, self.output.fitness, **plot_kwargs, label='fitness' if label_line else None)
+        if label_line:
+            plot_kwargs['label'] = 'fitness'
+        ax.plot(self.output.frame, self.output.fitness, **plot_kwargs)
 
         if self.input.stopping_fitness is not None:
             ax.axhline(self.input.stopping_fitness, linestyle=':', color='k')

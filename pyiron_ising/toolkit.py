@@ -34,51 +34,42 @@ class JobFactory(JobFactoryCore):
 
 
 class ModelFactory:
-    @classmethod
     @property
-    def Model(cls):
+    def Model(self):
         return Model
 
-    @classmethod
     @property
-    def Chain1D(cls):
+    def Chain1D(self):
         return Chain1D
 
-    @classmethod
     @property
-    def Square2D(cls):
+    def Square2D(self):
         return Square2D
 
-    @classmethod
     @property
-    def Hex2D(cls):
+    def Hex2D(self):
         return Hex2D
 
-    @classmethod
     @property
-    def FCC3D(cls):
+    def FCC3D(self):
         return FCC3D
 
-    @classmethod
     @property
-    def BCC3D(cls):
+    def BCC3D(self):
         return BCC3D
 
 
 class MutationFactory:
-    @classmethod
     @property
-    def Flip(cls):
+    def Flip(self):
         return Flip
 
-    @classmethod
     @property
-    def Swap(cls):
+    def Swap(self):
         return Swap
 
-    @classmethod
     @property
-    def Cluster(cls):
+    def Cluster(self):
         return Cluster
 
 
@@ -93,11 +84,11 @@ class IsingTools(Toolkit):
 
     @property
     def model(self):
-        return ModelFactory
+        return ModelFactory()
 
     @property
     def mutation(self):
-        return MutationFactory
+        return MutationFactory()
 
     @property
     @wraps(Mutator)

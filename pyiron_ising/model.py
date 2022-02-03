@@ -143,11 +143,22 @@ class Model(HasStorage):
         """Randomly reassign spins."""
         self.structure.indices = self.genome[self.choose(len(self))]
 
-    def choose(self, n_choices: int, array: np.ndarray = None, mask: np.ndarray = None):
+    def choose(
+            self,
+            n_choices: int,
+            mask: Union[np.ndarray, None] = None,
+            forbidden_site: Union[Integral, None] = None,
+            forbidden_spin: Union[Integral, None] = None,
+            forbid_perfect_sites: bool = False,
+    ):
         """Choose sites randomly without replacement."""
-        array = self.sites if array is None else np.array(array)
-        array = array[mask] if mask is not None else array
-        choice = np.random.choice(array, n_choices, replace=False)
+        true = np.ones(len(self), dtype=bool)
+        mask = (mask if mask is not None else true) * \
+               (self.sites != forbidden_site if forbidden_site is not None else true) * \
+               (self.genome != forbidden_spin if forbidden_spin is not None else true) * \
+               (self.fitness_array < 1 if forbid_perfect_sites else true)
+        sites = self.sites[mask] if mask is not None else self.sites
+        choice = np.random.choice(sites, n_choices, replace=False)
         if n_choices == 1:
             return choice[0]
         else:
@@ -175,10 +186,14 @@ class Model(HasStorage):
         )
 
     @property
-    def fitness(self):
+    def fitness_array(self):
         spins = self.genome
         neighbor_spins = self.genome[self.topology]
-        return self.interaction[spins[:, np.newaxis], neighbor_spins].mean()
+        return self.interaction[spins[:, np.newaxis], neighbor_spins].mean(axis=-1)
+
+    @property
+    def fitness(self):
+        return self.fitness_array.mean()
 
 
 class _SpecialModel(Model, ABC):

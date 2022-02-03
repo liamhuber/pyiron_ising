@@ -71,3 +71,14 @@ class TestBFS(PyironTestCase):
                         i, j, self.topology, self.condition, topo=self.topology, sig=self.signature_, thresh=thresh
                     )
                     self.assertEqual(len(ci), len(cj), msg='Clusters should always be truncated to have same length.')
+
+    def test_max_size(self):
+        self.assertEqual(
+            len(bfs(7, self.topology, self.condition, topo=self.topology, sig=self.signature_, thresh=2)), 4,
+            msg="Without max_size specified, the full cluster should be found"
+        )
+        self.assertEqual(
+            len(bfs(7, self.topology, self.condition, topo=self.topology, max_size=2, sig=self.signature_, thresh=2)),
+            2,
+            msg="With max_size specified, the cluster should be limited"
+        )
