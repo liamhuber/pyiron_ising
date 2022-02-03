@@ -4,7 +4,6 @@
 .ipynb_checkpoints
 *.log
 notebooks/*
-!notebooks/scaling.py
-!notebooks/scaling.ipynb
-!notebooks/pedagogy.ipynb
+!notebooks/scaling_1d.ipynb
+!notebooks/higher_dimension.ipynb
 *.gz
